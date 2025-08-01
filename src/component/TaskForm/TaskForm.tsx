@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useRef } from "react";
-import { useEffect } from "react";
+;
 import type { EditProps } from "../../types";
-import type{ Task } from "../../types";
+
 import type { TaskStatus } from "../../types";
 
 export default function EditTaskForm({ edit, onSubmit }: EditProps) {
@@ -13,16 +12,14 @@ export default function EditTaskForm({ edit, onSubmit }: EditProps) {
 const [description, setDescription] = useState<string>(edit.description);
 const [dueDate, setDueDate] = useState<string>(edit.dueDate);
   const [priority, setPriority] = useState<'low'|'medium'|'high'>(edit.priority);
+  
   const [status, setStatus] = useState<TaskStatus>(edit.status);
 
 
 const[error,setError]=useState<string>("")
   
- const inputRef = useRef<HTMLInputElement>(null);
+ 
 
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +34,7 @@ const[error,setError]=useState<string>("")
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <input
-        ref={inputRef}
+        
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         className="w-full p-2 border rounded bg-white"

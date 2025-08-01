@@ -33,3 +33,9 @@ export interface EditProps {
   edit: Task
   onSubmit: (updated:Task) => void;
 }
+
+export interface SearchProps {
+  tasks: Task[];
+  onSearch: (results: Task[]) => void;
+}
+
