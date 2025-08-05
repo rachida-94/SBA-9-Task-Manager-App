@@ -1,84 +1,83 @@
-import { useState } from "react";
-;
-import type { EditProps } from "../../types";
+import { useState } from 'react';
+import type { Task } from '../../types';
 
-import type { TaskStatus } from "../../types";
+type EditTaskFormProps = {
+  edit: Task;
+  onSubmit: (task: Task) => void;
+};
 
-export default function EditTaskForm({ edit, onSubmit }: EditProps) {
-
-
-
-  const [title, setTitle] = useState<string>(edit.title);
-const [description, setDescription] = useState<string>(edit.description);
-const [dueDate, setDueDate] = useState<string>(edit.dueDate);
-  const [priority, setPriority] = useState<'low'|'medium'|'high'>(edit.priority);
-  
-  const [status, setStatus] = useState<TaskStatus>(edit.status);
-
-
-const[error,setError]=useState<string>("")
-  
- 
-
+export default function EditTaskForm({ edit, onSubmit }: EditTaskFormProps) {
+  const [title, setTitle] = useState(edit.title);
+  const [description, setDescription] = useState(edit.description);
+  const [dueDate, setDueDate] = useState(edit.dueDate);
+  const [priority, setPriority] = useState(edit.priority);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if(!title.trim()){ setError("Task title cannot be empty.")
-        return
-    } 
-       
-        
-    onSubmit({ ...edit, title, description,dueDate,priority,status });
+
+    
+    if (!title.trim()) {
+      alert('Task title is required.');
+      return;
+    }
+    if (!description.trim()) {
+      alert('Task description is required.');
+      return;
+    }
+    if (!dueDate) {
+      alert('Please choose a due date.');
+      return;
+    }
+
+    
+    const updatedTask: Task = {
+      ...edit,
+      title: title.trim(),
+      description: description.trim(),
+      dueDate,
+      priority,
+    };
+
+    onSubmit(updatedTask);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 p-4 max-w-xl mx-auto">
+      <h2 className="text-xl font-semibold text-center">Edit Task</h2>
       <input
-        
+        type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className="w-full p-2 border rounded bg-white"
+        className="w-full p-2 border rounded"
+        placeholder="Task title"
       />
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
-        placeholder="Update task description"
-        className="w-full p-2 border rounded bg-white resize-none"
+        className="w-full p-2 border rounded"
+        placeholder="Task description"
       />
       <input
-              type="date"
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-              className="w-full p-2 border border-gray-600 rounded bg-gray-800 text-white
-              focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-      
-            <select
-              value={priority}
-              onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
-              className={`w-full p-2 rounded bg-gray-800 border border-gray-600
-                text-white hover:bg-green-300 hover:text-black `}
-            >
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>3
-      
-              <option value="high">High</option>
-            </select>
-      
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value as TaskStatus)}
-              className={`w-full p-2 rounded bg-gray-800 border border-gray-600
-                text-white hover:bg-yellow-200 hover:text-black `}
-            >
-              <option value="pending">Pending</option>
-              <option value="in-progress">In Progress</option>
-              <option value="completed">Completed</option>
-            </select>
-      
-      
-
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-      <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">Update</button>
+        type="date"
+        value={dueDate}
+        onChange={(e) => setDueDate(e.target.value)}
+        className="w-full p-2 border rounded"
+      />
+      <select
+        value={priority}
+        onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
+        className="w-full p-2 border rounded"
+      >
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+      <button
+        type="submit"
+        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+      >
+        Save Changes
+      </button>
     </form>
-  )};
+  );
+}

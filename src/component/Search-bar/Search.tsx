@@ -1,45 +1,38 @@
-import React from 'react'
+import { useState } from 'react';
+import { BiSearch } from 'react-icons/bi';
 
-import { BiNotification, BiSearch } from 'react-icons/bi'
-
-import type{ SearchProps } from '../../types'
-
-import { useState } from 'react'
+import type { SearchProps } from '../../types';
 
 
+export default function Search({ tasks, onSearch }: SearchProps) {
+  const [searchTerm, setSearchTerm] = useState('');
 
-export default function Search({tasks,onSearch}:SearchProps) {
-const [searchTerm,setSearchTerm]=useState('')
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
 
-function handleSearchKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-  if(e.key =="Enter"){
-    const inputValue=(e.target as HTMLInputElement).value
-    const filtered=tasks.filter((task)=>
-    task.title.toLowerCase().includes(inputValue.toLowerCase()))
-  onSearch(filtered)
+    const filtered = tasks.filter((task) =>
+      task.title.toLowerCase().includes(value)||
+    task.description.toLowerCase().includes(value)
+    );
+
+    onSearch(filtered);
   }
-}
 
   return (
-    <div className='flex flex-col gap-4 p-4 bg-purple-300 rounded-lg shadow-md'>
-        <h1 className='text-2xl font-bold text-white'>Dashboard</h1>
-        <div className="flex items-center justify-between">
-            <div className='flex items-center gap-2 bg-purple-200 px-3 py-2 rounded-md w-full max-w-md'>
-                <input type="text"
-                value={searchTerm}
-                onChange={e =>setSearchTerm(e.target.value)}
-                  onKeyDown={handleSearchKeyDown}
-                   placeholder='Search anything here...'
-                 
-                className='bg-white text-black placeholder-dark-500 focus:outline-none w-full max-w-mf'/>
-                <BiSearch className='text-white text-xl'
-               />
-                
-            </div>
-            <div className='ml-4 text-white hover:text-blue-500 cursor-pointer'>
-                <BiNotification className='text-2xl'/>
-            </div>
-        </div>
+    <div className="search-container flex items-center gap-2 mb-4">
+      <label htmlFor="search-input" className="sr-only">
+        Search tasks
+      </label>
+      <BiSearch className="text-xl text-purple-600" />
+      <input
+        id="search-input"
+        type="text"
+        value={searchTerm}
+        onChange={handleChange}
+        placeholder="Search tasks..."
+        className="w-full p-2 border border-purple-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+      />
     </div>
-  )
+  );
 }
